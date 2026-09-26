@@ -18,12 +18,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Restore the original website
+      - name: Prepare optimized website
         run: |
           mkdir -p _site
-          gzip -dc index.html.gz > _site/index.html
-          cp fipi_links_by_number.csv fipi_green_highlight.user.js _site/
-          touch _site/.nojekyll
+          unzip -q site.zip -d _site
+          test -s _site/index.html
+          test -s _site/manifest.json
+          test -s _site/app.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
